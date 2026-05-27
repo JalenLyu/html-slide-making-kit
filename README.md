@@ -1,16 +1,6 @@
 # HTML Slide Making Kit
 
-这是一个用来制作和展示 HTML slides 的示例包。
-
-它关注的不是某一个具体产品，而是如何把 **网页技术、真实视觉资产、产品动效和 Codex skills** 组合起来，做出可以直接在浏览器里演示、迭代和分享的 slides。
-
-## 这个包展示什么
-
-- 用单个 HTML 文件承载完整 slide deck。
-- 用真实品牌资产建立稳定的视觉基线。
-- 用 product motion 表达产品动作，而不是只放静态截图。
-- 用概念图、标注和页面动效解释一套工作方法。
-- 用 skills 把版式、文案偏好、动效检查和资产生成沉淀成可复用流程。
+一个 HTML slide 制作包：包含可直接打开的 Shopee 风格 HTML 模板、带 product motion 的示例 deck，以及可复用的 Codex slide skills。
 
 ## Included Examples
 
@@ -24,7 +14,7 @@
 
 一个完整的 product-motion 示例 deck。
 
-它用一个个人工作台案例演示：如何把工具方法、产品界面、点击路径、输出结果和讲述文案组合在同一个 deck 里。这个文件的重点是 slide 制作方法，不是 Workbench 产品本身。
+它用一个个人工作台案例演示：如何把工具方法、产品界面、点击路径、输出结果和讲述文案组合在同一个 deck 里。
 
 ### `index.html`
 
