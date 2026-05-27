@@ -66,8 +66,3 @@ open shopee-html-template-real-assets.html
 ```bash
 node skills/product-demo-motion/scripts/validate-product-demo-motion.mjs pm-os-workbench-product-motion-example.html
 ```
-
-## Notes Before Public Sharing
-
-- 包内包含 Shopee 风格资产和示例内容。公开分享前请确认这些资产和示例内容适合放到你的目标 GitHub repository。
-- Product-motion example deck 是方法演示样例，不建议把仓库标题或 README 写成某个具体产品介绍。
