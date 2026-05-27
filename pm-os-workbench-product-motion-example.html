@@ -1,0 +1,1848 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PM OS Workbench Team Share · 2026-05-25</title>
+  <style>
+    @font-face {
+      font-family: "ShopeeFont";
+      src: url("assets/shopee-design/typography/ShopeeFont/OpenType-TT/ShopeeFont-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "ShopeeFont";
+      src: url("assets/shopee-design/typography/ShopeeFont/OpenType-TT/ShopeeFont-Bold.ttf") format("truetype");
+      font-weight: 800;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --orange: #ee4d2d;
+      --orange-soft: #fff3ef;
+      --ink: #111111;
+      --muted: #626262;
+      --faint: #888888;
+      --line: #ded8d0;
+      --paper: #ffffff;
+      --panel: #fbfaf7;
+      --panel-2: #f3f0ea;
+      --green: #4f7468;
+      --blue: #58798d;
+      --purple: #7a6ea8;
+      --warn: #b05d44;
+      --shadow: 0 18px 42px rgba(22, 18, 12, 0.10);
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --font: "ShopeeFont", Arial, "Noto Sans SC", sans-serif;
+      font-family: var(--font);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font);
+    }
+
+    .deck {
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      position: relative;
+      background: #fff;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      padding: clamp(28px, 4.2vh, 44px) clamp(42px, 6vw, 78px);
+      background: var(--paper);
+    }
+
+    .slide.visible {
+      display: block;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: min(360px, 28vw);
+      height: 6px;
+      background: var(--orange);
+    }
+
+    .deck-brand {
+      position: absolute;
+      top: clamp(28px, 4.8vh, 44px);
+      left: clamp(42px, 6vw, 78px);
+      display: inline-grid;
+      grid-template-columns: 26px auto;
+      align-items: center;
+      gap: 9px;
+      color: var(--orange);
+      font-size: clamp(12px, 1.1vw, 15px);
+      font-weight: 800;
+      z-index: 3;
+    }
+
+    .deck-brand::before {
+      content: "";
+      width: 24px;
+      height: 24px;
+      border-radius: 5px;
+      background: url("assets/shopee-design/logo/shopee-bag-mark.png") center / contain no-repeat;
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: clamp(18px, 2.4vh, 26px);
+      height: calc(100vh - clamp(138px, 18vh, 168px));
+      height: calc(100dvh - clamp(138px, 18vh, 168px));
+      margin-top: clamp(54px, 9vh, 78px);
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .slide-content:not(.cover-grid):not(.takeaway) {
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .slide-title {
+      color: var(--orange);
+      font-size: clamp(27px, 3vw, 42px);
+      line-height: 1.14;
+      margin: 0;
+      max-width: 1120px;
+      padding-bottom: clamp(10px, 1.3vh, 14px);
+      border-bottom: 4px solid var(--orange);
+      font-weight: 800;
+    }
+
+    .cover-grid {
+      grid-template-columns: minmax(320px, 0.72fr) minmax(520px, 1.28fr);
+      align-items: center;
+      gap: clamp(30px, 5vw, 70px);
+    }
+
+    .cover-title {
+      color: var(--orange);
+      font-size: clamp(44px, 4.5vw, 54px);
+      line-height: 1.05;
+      margin: 0;
+      max-width: 620px;
+      font-weight: 800;
+      text-wrap: balance;
+    }
+
+    .cover-rule {
+      width: min(420px, 100%);
+      height: 6px;
+      margin: clamp(20px, 3vh, 30px) 0;
+      background: var(--orange);
+    }
+
+    .cover-meta {
+      color: #3f4b51;
+      font-size: clamp(17px, 1.7vw, 22px);
+      line-height: 1.48;
+      margin: 0;
+      max-width: 560px;
+    }
+
+    .footer {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(18px, 2.5vh, 26px);
+      transform: translateX(-50%);
+      color: var(--faint);
+      font-size: clamp(11px, 1vw, 13px);
+      z-index: 4;
+    }
+
+    .page-num {
+      position: absolute;
+      right: clamp(42px, 6vw, 78px);
+      bottom: clamp(18px, 2.5vh, 26px);
+      color: var(--faint);
+      font-size: clamp(11px, 1vw, 13px);
+      z-index: 4;
+    }
+
+    .dots {
+      position: absolute;
+      right: clamp(18px, 2.2vw, 28px);
+      top: 50%;
+      z-index: 8;
+      display: grid;
+      gap: 9px;
+      transform: translateY(-50%);
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border: 0;
+      border-radius: 999px;
+      background: #d8d8d8;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .dot.active {
+      background: var(--orange);
+      transform: scale(1.18);
+    }
+
+    .reveal {
+      animation: reveal 520ms var(--ease) both;
+    }
+
+    .d1 { animation-delay: 70ms; }
+    .d2 { animation-delay: 130ms; }
+    .d3 { animation-delay: 190ms; }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .two-col,
+    .method-grid,
+    .artifact-grid,
+    .qa-grid {
+      display: grid;
+      grid-template-columns: minmax(300px, 0.78fr) minmax(560px, 1.22fr);
+      gap: clamp(18px, 2.5vw, 30px);
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .visual-left {
+      grid-template-columns: minmax(560px, 1.24fr) minmax(300px, 0.76fr);
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(14px, 1.8vw, 22px);
+      min-height: 0;
+    }
+
+    .stack {
+      display: grid;
+      gap: 13px;
+      align-content: start;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .card,
+    .note-card,
+    .metric-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: clamp(13px, 1.55vw, 18px);
+      box-shadow: 0 10px 26px rgba(20, 14, 8, 0.045);
+      min-width: 0;
+    }
+
+    .label {
+      display: block;
+      color: var(--orange);
+      font-size: clamp(11px, 0.95vw, 14px);
+      font-weight: 800;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .card h3,
+    .note-card h3 {
+      margin: 0 0 8px;
+      font-size: clamp(17px, 1.5vw, 22px);
+      line-height: 1.18;
+    }
+
+    .card p,
+    .note-card p,
+    .card li {
+      color: #464646;
+      font-size: clamp(12px, 1.03vw, 15px);
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .method-board,
+    .contract-board,
+    .workflow-board {
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(238, 77, 45, 0.055), rgba(79, 116, 104, 0.055)),
+        #fff;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 14px;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+      padding: clamp(16px, 2vw, 22px);
+    }
+
+    .method-chain {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .method-step {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      display: grid;
+      gap: 7px;
+      min-height: 145px;
+      padding: 12px;
+    }
+
+    .method-step b,
+    .flow-row b {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 4px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .method-step strong {
+      font-size: 17px;
+      line-height: 1.18;
+    }
+
+    .method-step span {
+      color: #5d5d5d;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .arrow-text {
+      color: var(--orange);
+      font-size: clamp(22px, 2.4vw, 32px);
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .method-output {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      border: 1px solid rgba(238, 77, 45, 0.26);
+      background: #fff8f4;
+      border-radius: 8px;
+      padding: 15px;
+    }
+
+    .method-output strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: clamp(18px, 1.55vw, 22px);
+    }
+
+    .method-output span {
+      color: #555;
+      font-size: 13px;
+      line-height: 1.38;
+    }
+
+    .method-output code,
+    .flow-row code,
+    .tag {
+      border: 1px solid rgba(238, 77, 45, 0.22);
+      background: #fff;
+      border-radius: 999px;
+      color: var(--orange);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 9px;
+      white-space: nowrap;
+    }
+
+    .concept-layout {
+      display: grid;
+      grid-template-columns: minmax(660px, 1.48fr) minmax(260px, 0.52fr);
+      gap: clamp(16px, 2.1vw, 24px);
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .concept-figure {
+      position: relative;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background:
+        linear-gradient(135deg, rgba(238, 77, 45, 0.04), rgba(79, 116, 104, 0.05)),
+        #fff;
+      box-shadow: var(--shadow);
+      padding: clamp(12px, 1.5vw, 18px);
+    }
+
+    .concept-figure img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .concept-callout {
+      position: absolute;
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      align-items: center;
+      gap: 8px;
+      max-width: 198px;
+      border: 1px solid rgba(238, 77, 45, 0.30);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 12px 28px rgba(20, 14, 8, 0.10);
+      padding: 7px 9px;
+    }
+
+    .concept-callout b {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .concept-callout strong {
+      display: block;
+      font-size: 12px;
+      line-height: 1.1;
+    }
+
+    .concept-callout span {
+      display: block;
+      margin-top: 3px;
+      color: #5a5a5a;
+      font-size: 9px;
+      line-height: 1.22;
+    }
+
+    .callout-source { left: 6%; bottom: 10%; }
+    .callout-tools { left: 33%; top: 34%; }
+    .callout-agent { left: 53%; bottom: 10%; }
+    .callout-output { right: 6%; top: 33%; }
+
+    .concept-side {
+      display: grid;
+      gap: 9px;
+      align-content: stretch;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .concept-side .flow-row {
+      position: relative;
+      grid-template-columns: 34px minmax(0, 1fr);
+      min-height: 0;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 64px 9px 10px;
+    }
+
+    .concept-side .flow-row b {
+      width: 30px;
+      height: 30px;
+      font-size: 13px;
+    }
+
+    .concept-side .flow-row strong {
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .concept-side .flow-row span {
+      font-size: 11px;
+      line-height: 1.28;
+    }
+
+    .concept-side .flow-row code {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      min-width: 42px;
+      padding: 5px 8px;
+      text-align: center;
+    }
+
+    .concept-side .method-output {
+      padding: 12px 13px;
+    }
+
+    .concept-side .method-output span {
+      font-size: 12px;
+    }
+
+    .source-stack {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .source-file {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      display: grid;
+      gap: 8px;
+      min-height: 170px;
+      padding: 14px;
+    }
+
+    .source-file b {
+      color: var(--orange);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .source-file strong {
+      font-size: clamp(17px, 1.45vw, 21px);
+    }
+
+    .source-file span,
+    .source-file code {
+      color: #5f5f5f;
+      font-size: clamp(11px, 0.95vw, 14px);
+      line-height: 1.36;
+    }
+
+    .source-file code {
+      display: block;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      white-space: pre-wrap;
+    }
+
+    .contract-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      align-content: center;
+      height: 100%;
+    }
+
+    .contract-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      display: grid;
+      gap: 8px;
+      min-height: 200px;
+      padding: 15px;
+    }
+
+    .contract-card b {
+      color: var(--orange);
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .contract-card strong {
+      font-size: 20px;
+      line-height: 1.15;
+    }
+
+    .contract-card span {
+      color: #5b5b5b;
+      font-size: 13px;
+      line-height: 1.42;
+    }
+
+    .flow {
+      display: grid;
+      gap: 10px;
+    }
+
+    .flow-row {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid rgba(238, 77, 45, 0.22);
+      background: #fff;
+      border-radius: 8px;
+      padding: 11px 12px;
+    }
+
+    .flow-row strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 16px;
+      line-height: 1.18;
+    }
+
+    .flow-row span {
+      color: #5d5d5d;
+      display: block;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .wb-frame {
+      background: #f5f2eb;
+      border: 1px solid #d8d0c4;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .wb-topbar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+      height: 36px;
+      border-bottom: 1px solid #d8d0c4;
+      background: #eee9df;
+      color: #514a42;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 0 12px;
+    }
+
+    .traffic {
+      display: flex;
+      gap: 6px;
+    }
+
+    .traffic i {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #d8d0c4;
+    }
+
+    .sample-badge {
+      justify-self: end;
+      border: 1px solid rgba(238, 77, 45, 0.24);
+      background: #fff8f2;
+      border-radius: 999px;
+      color: #756c62;
+      font-size: 10px;
+      padding: 3px 8px;
+      text-transform: uppercase;
+    }
+
+    .wb-body {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      height: calc(100% - 36px);
+      min-height: 0;
+    }
+
+    .wb-sidebar {
+      display: grid;
+      align-content: start;
+      gap: 11px;
+      padding: 13px 9px;
+      border-right: 1px solid #d8d0c4;
+      color: #9b9288;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .wb-canvas {
+      padding: 13px;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .jw-shell-shot {
+      display: grid;
+      gap: 10px;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .jw-header-shot,
+    .jw-panel-shot,
+    .jw-card-shot {
+      border: 1px solid #d8d0c4;
+      background: #fbfaf7;
+      border-radius: 8px;
+    }
+
+    .jw-header-shot {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .jw-header-shot::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 3px;
+      background: linear-gradient(180deg, #d97757, #4f7468);
+    }
+
+    .jw-eyebrow-shot {
+      color: var(--orange);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .jw-header-shot h2 {
+      font-size: clamp(19px, 2vw, 27px);
+      line-height: 1;
+      margin: 2px 0 0;
+    }
+
+    .jw-header-shot p {
+      color: #6e675f;
+      font-size: 11px;
+      font-weight: 700;
+      margin: 5px 0 0;
+    }
+
+    .jw-status-shot {
+      border: 1px solid #d8d0c4;
+      border-radius: 999px;
+      color: #68635d;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 10px;
+      white-space: nowrap;
+    }
+
+    .jw-tabs-shot {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .jw-tab-shot {
+      display: grid;
+      gap: 3px;
+      min-height: 50px;
+      border: 1px solid #d8d0c4;
+      background: #fbfaf7;
+      border-radius: 8px;
+      padding: 8px 7px;
+    }
+
+    .jw-tab-shot.active {
+      border-color: rgba(238, 77, 45, 0.52);
+      box-shadow: inset 0 0 0 2px rgba(238, 77, 45, 0.12);
+    }
+
+    .jw-tab-shot span {
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .jw-tab-shot strong {
+      font-size: 19px;
+      line-height: 1;
+    }
+
+    .jw-dashboard-shot {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.82fr);
+      gap: 10px;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .jw-two-shot {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .jw-panel-shot {
+      display: grid;
+      align-content: start;
+      gap: 8px;
+      min-height: 0;
+      overflow: hidden;
+      padding: 10px;
+    }
+
+    .jw-panel-shot.primary {
+      background: color-mix(in srgb, #fbfaf7 91%, var(--green));
+    }
+
+    .jw-panel-head-shot {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .jw-panel-head-shot h3 {
+      font-size: 17px;
+      margin: 0;
+    }
+
+    .jw-panel-head-shot span {
+      color: #706a62;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .jw-input-shot {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+    }
+
+    .jw-input-shot input {
+      border: 1px solid #d8d0c4;
+      background: #fff;
+      border-radius: 8px;
+      color: #777;
+      font-size: 12px;
+      min-height: 32px;
+      padding: 7px 10px;
+    }
+
+    .jw-pill,
+    .jw-input-shot button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 28px;
+      border: 1px solid #d8d0c4;
+      background: #fff;
+      border-radius: 999px;
+      color: #111;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 5px 9px;
+      white-space: nowrap;
+    }
+
+    .jw-pill.primary,
+    .jw-input-shot button {
+      background: #d97757;
+      border-color: #d97757;
+      color: #181716;
+    }
+
+    .jw-actions-shot {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .jw-list-shot {
+      display: grid;
+      gap: 6px;
+      min-height: 0;
+    }
+
+    .jw-task-shot,
+    .jw-row-shot,
+    .jw-intel-shot,
+    .jw-project-shot,
+    .jw-signal-shot,
+    .jw-brief-shot {
+      border: 1px solid #d8d0c4;
+      background: #f1eee7;
+      border-radius: 8px;
+      min-width: 0;
+      padding: 8px 9px;
+    }
+
+    .jw-task-shot {
+      display: grid;
+      grid-template-columns: 20px minmax(0, 1fr);
+      gap: 9px;
+      align-items: center;
+    }
+
+    .jw-task-shot[data-urgent="true"] {
+      border-color: rgba(238, 77, 45, 0.34);
+      background: #fff6ef;
+    }
+
+    .check {
+      width: 16px;
+      height: 16px;
+      border: 1px solid #cfc6ba;
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .jw-task-shot strong,
+    .jw-row-shot strong,
+    .jw-intel-shot strong,
+    .jw-project-shot strong,
+    .jw-signal-shot strong,
+    .jw-brief-shot strong {
+      display: block;
+      font-size: 12.5px;
+      line-height: 1.22;
+      overflow-wrap: anywhere;
+    }
+
+    .jw-task-shot em,
+    .jw-row-shot span,
+    .jw-intel-shot span,
+    .jw-project-shot span,
+    .jw-signal-shot span,
+    .jw-brief-shot span,
+    .jw-brief-shot p {
+      color: #6d675f;
+      display: block;
+      font-size: 10.5px;
+      font-style: normal;
+      line-height: 1.32;
+      margin: 3px 0 0;
+    }
+
+    .focus-inline-shot {
+      border: 1px solid rgba(79, 116, 104, 0.24);
+      background: rgba(79, 116, 104, 0.08);
+      border-radius: 8px;
+      display: grid;
+      gap: 7px;
+      padding: 8px;
+    }
+
+    .focus-head-shot {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      color: #4f7468;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .focus-chips-shot {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .focus-chips-shot span {
+      border: 1px solid rgba(79, 116, 104, 0.28);
+      background: #fff;
+      border-radius: 999px;
+      color: #4f7468;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 4px 7px;
+    }
+
+    .rail-stack-shot {
+      display: grid;
+      gap: 7px;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 5px;
+    }
+
+    .tag-row i {
+      border: 1px solid rgba(79, 116, 104, 0.28);
+      border-radius: 999px;
+      color: #4f7468;
+      font-size: 9px;
+      font-style: normal;
+      font-weight: 900;
+      padding: 3px 5px;
+      text-transform: uppercase;
+    }
+
+    .tag-row i.hot {
+      border-color: rgba(238, 77, 45, 0.34);
+      color: var(--orange);
+    }
+
+    .project-view .jw-dashboard-shot,
+    .signals-view .jw-dashboard-shot,
+    .review-view .jw-dashboard-shot,
+    .system-view .jw-dashboard-shot {
+      display: block;
+    }
+
+    .project-list {
+      display: grid;
+      gap: 7px;
+      max-height: min(330px, 35vh);
+      overflow: hidden;
+    }
+
+    .jw-project-shot {
+      display: grid;
+      gap: 6px;
+    }
+
+    .project-top-shot {
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+    }
+
+    .project-status-shot {
+      border: 1px solid rgba(238, 77, 45, 0.28);
+      border-radius: 999px;
+      color: var(--orange);
+      font-size: 10px;
+      font-weight: 900;
+      padding: 4px 6px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .project-foot-shot {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .signal-grid-shot {
+      display: grid;
+      grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+      gap: 10px;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .brief-stack-shot {
+      display: grid;
+      gap: 7px;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .skill-grid-shot,
+    .report-grid-shot {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .skill-card-shot {
+      border: 1px solid #d8d0c4;
+      background: #f1eee7;
+      border-radius: 8px;
+      display: grid;
+      gap: 6px;
+      min-height: 96px;
+      padding: 9px;
+    }
+
+    .skill-card-shot h4 {
+      font-size: 15px;
+      margin: 0;
+    }
+
+    .skill-card-shot p,
+    .skill-card-shot em {
+      color: #514d47;
+      font-size: 10.5px;
+      line-height: 1.32;
+      margin: 0;
+    }
+
+    .project-modal-shot {
+      border: 1px solid rgba(238, 77, 45, 0.28);
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 8px;
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+    }
+
+    .project-modal-row-shot {
+      display: grid;
+      grid-template-columns: 78px minmax(0, 1fr);
+      align-items: center;
+      gap: 8px;
+      color: #5c554d;
+      font-size: 11px;
+    }
+
+    .project-modal-row-shot span:last-child {
+      border: 1px solid #d8d0c4;
+      background: #f5f2eb;
+      border-radius: 6px;
+      color: #2f2b25;
+      overflow: hidden;
+      padding: 5px 7px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pdm-demo {
+      position: relative;
+      border: 1px solid #d8d0c4;
+      border-radius: 10px;
+      background: #f5f2eb;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .pdm-stage {
+      position: absolute;
+      inset: 0;
+      padding: 12px;
+      transform-origin: center;
+      animation: pdmBase 9s cubic-bezier(0.76, 0, 0.24, 1) infinite both;
+    }
+
+    .pdm-dim {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      background: radial-gradient(circle at 36% 35%, rgba(255,255,255,0.02) 0, rgba(0,0,0,0) 28%, rgba(24,18,12,0.42) 72%);
+      opacity: 0;
+      animation: pdmDim 9s cubic-bezier(0.76, 0, 0.24, 1) infinite both;
+      pointer-events: none;
+    }
+
+    .pdm-cursor {
+      position: absolute;
+      z-index: 7;
+      width: 0;
+      height: 0;
+      border-left: 17px solid #102235;
+      border-top: 12px solid transparent;
+      border-bottom: 12px solid transparent;
+      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.28));
+      transform: rotate(-18deg);
+      animation: cursorSignal 9s cubic-bezier(0.76, 0, 0.24, 1) infinite both;
+    }
+
+    .project-motion .pdm-cursor {
+      animation-name: cursorProject;
+    }
+
+    .pdm-click {
+      position: absolute;
+      z-index: 6;
+      left: 72%;
+      top: 67%;
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(217, 119, 87, 0.58);
+      border-radius: 999px;
+      opacity: 0;
+      animation: clickPulse 9s var(--ease) infinite both;
+    }
+
+    .project-motion .pdm-click {
+      left: 28%;
+      top: 38%;
+    }
+
+    .pdm-lens {
+      position: absolute;
+      z-index: 5;
+      left: 5%;
+      right: 5%;
+      bottom: 5%;
+      min-height: 42%;
+      border: 1px solid rgba(238, 77, 45, 0.28);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 20px 48px rgba(32, 20, 12, 0.24);
+      display: grid;
+      gap: 9px;
+      opacity: 0;
+      padding: 12px;
+      transform-origin: 72% 66%;
+      animation: lensIn 9s cubic-bezier(0.76, 0, 0.24, 1) infinite both;
+    }
+
+    .project-motion .pdm-lens {
+      transform-origin: 28% 38%;
+    }
+
+    .pdm-lens-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .pdm-lens h3 {
+      font-size: clamp(18px, 1.55vw, 23px);
+      margin: 0;
+    }
+
+    .pdm-lens p {
+      color: #3f3a34;
+      font-size: 12px;
+      line-height: 1.35;
+      margin: 0;
+    }
+
+    .pdm-mini-code {
+      display: grid;
+      gap: 4px;
+      border: 1px solid #d8d0c4;
+      background: #f5f2eb;
+      border-radius: 8px;
+      color: #2f2b25;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 10px;
+      padding: 8px;
+    }
+
+    .pdm-result-card {
+      border: 1px solid rgba(79, 116, 104, 0.35);
+      background: rgba(79, 116, 104, 0.1);
+      border-radius: 8px;
+      opacity: 0;
+      padding: 9px 11px;
+      transform: translateY(8px);
+      animation: resultAppear 9s var(--ease) infinite both;
+    }
+
+    @keyframes pdmBase {
+      0%, 20%, 100% { filter: blur(0) brightness(1); transform: scale(1); }
+      32%, 78% { filter: blur(4px) brightness(0.72); transform: scale(1.03); }
+      88% { filter: blur(0) brightness(1); transform: scale(1.01); }
+    }
+
+    @keyframes pdmDim {
+      0%, 20%, 91%, 100% { opacity: 0; }
+      32%, 79% { opacity: 1; }
+    }
+
+    @keyframes cursorSignal {
+      0%, 12% { left: 20%; top: 22%; opacity: 0; }
+      19% { opacity: 1; }
+      30%, 37% { left: 73%; top: 68%; opacity: 1; }
+      48%, 74% { left: 82%; top: 76%; opacity: 0.18; }
+      84%, 100% { left: 88%; top: 78%; opacity: 0; }
+    }
+
+    @keyframes cursorProject {
+      0%, 12% { left: 18%; top: 23%; opacity: 0; }
+      19% { opacity: 1; }
+      30%, 37% { left: 29%; top: 39%; opacity: 1; }
+      48%, 74% { left: 70%; top: 68%; opacity: 0.18; }
+      84%, 100% { left: 78%; top: 72%; opacity: 0; }
+    }
+
+    @keyframes clickPulse {
+      0%, 27%, 38%, 100% { opacity: 0; transform: scale(0.45); }
+      31% { opacity: 0.85; transform: scale(1); }
+      35% { opacity: 0; transform: scale(1.45); }
+    }
+
+    @keyframes lensIn {
+      0%, 24%, 91%, 100% { opacity: 0; transform: translateY(20px) scale(0.74); }
+      37%, 79% { opacity: 1; transform: translateY(0) scale(1); }
+      86% { opacity: 0; transform: translateY(12px) scale(0.94); }
+    }
+
+    @keyframes resultAppear {
+      0%, 48%, 100% { opacity: 0; transform: translateY(8px); }
+      57%, 78% { opacity: 1; transform: translateY(0); }
+      86% { opacity: 0; transform: translateY(4px); }
+    }
+
+    .takeaway {
+      display: grid;
+      grid-template-columns: 0.86fr 1.14fr;
+      gap: clamp(20px, 3vw, 40px);
+      align-items: center;
+      min-height: 0;
+    }
+
+    .takeaway h2 {
+      color: var(--orange);
+      font-size: clamp(42px, 5.2vw, 74px);
+      line-height: 1.08;
+      margin: 0;
+    }
+
+    @media (max-width: 920px), (max-height: 660px) {
+      .slide {
+        padding: 24px 32px;
+      }
+
+      .deck-brand {
+        left: 32px;
+        top: 28px;
+      }
+
+      .slide-content {
+        height: calc(100dvh - 126px);
+        margin-top: 50px;
+      }
+
+      .cover-grid,
+      .two-col,
+      .method-grid,
+      .artifact-grid,
+      .qa-grid,
+      .takeaway,
+      .visual-left {
+        grid-template-columns: 1fr;
+      }
+
+      .three-col,
+      .method-chain,
+      .source-stack,
+      .contract-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wb-frame {
+        min-height: 360px;
+      }
+
+      .dots {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+
+      .pdm-lens,
+      .pdm-result-card,
+      .pdm-dim {
+        opacity: 1;
+        transform: none;
+      }
+
+      .pdm-stage {
+        filter: blur(3px) brightness(0.78);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" id="deck">
+    <section class="slide visible" data-title="Cover">
+      <div class="deck-brand">PM OS Workbench</div>
+      <div class="slide-content cover-grid">
+        <div class="reveal">
+          <h1 class="cover-title">用 Codex 打造<br>个人 PM 工作台</h1>
+          <div class="cover-rule"></div>
+          <p class="cover-meta">把本地文件作为知识库，让 Codex 调工具做项目归类、进度摘要和信息聚合，再回到个人工作台确认。</p>
+          <p class="cover-meta">Team Sharing · 2026-05-25</p>
+        </div>
+        <div class="wb-frame reveal d2">
+          <div class="wb-topbar"><span class="traffic"><i></i><i></i><i></i></span><span>Jalen Workbench</span><span class="sample-badge">Sample data</span></div>
+          <div class="wb-body">
+            <div class="wb-sidebar">⌂<br>⌕<br>▦<br>☰<br>⌘</div>
+            <div class="wb-canvas">
+              <div class="jw-shell-shot">
+                <div class="jw-header-shot">
+                  <div><span class="jw-eyebrow-shot">Tue, May 26</span><h2>Jalen Workbench</h2><p>1 P0 · 14 signals · 1 milestones · 16 review</p></div>
+                  <div class="jw-status-shot">Today</div>
+                </div>
+                <div class="jw-tabs-shot">
+                  <div class="jw-tab-shot active"><span>Todo</span><strong>20</strong></div>
+                  <div class="jw-tab-shot"><span>Signals</span><strong>14</strong></div>
+                  <div class="jw-tab-shot"><span>Projects</span><strong>9</strong></div>
+                  <div class="jw-tab-shot"><span>Review</span><strong>16</strong></div>
+                  <div class="jw-tab-shot"><span>System</span><strong>OK</strong></div>
+                </div>
+                <div class="jw-dashboard-shot">
+                  <div class="jw-panel-shot primary">
+                    <div class="jw-panel-head-shot"><h3>Todo</h3><span>20 open · 8 inbox · 1 focus</span></div>
+                    <div class="jw-input-shot"><input value="新增待办，Enter 保存" aria-label="mock input"><button>新增</button></div>
+                    <div class="focus-inline-shot">
+                      <div class="focus-head-shot"><strong>Focus</strong><span>1 P0 · 0 wait · 0 sync</span></div>
+                      <div class="focus-chips-shot"><span>1 P0</span><span>0 Wait</span><span>0 Sync</span></div>
+                      <div class="jw-task-shot" data-urgent="true"><span class="check"></span><span><strong>Auto Greeting PRD 优先完成</strong><em>Inbox/收件箱.md:12</em></span></div>
+                    </div>
+                    <div class="jw-task-shot"><span class="check"></span><span><strong>整理模型预算复盘输入</strong><em>Daily/2026-05-26.md:18</em></span></div>
+                  </div>
+                  <div class="rail-stack-shot">
+                    <div class="jw-panel-shot"><div class="jw-panel-head-shot"><h3>AI Hot</h3><span>7 unread · 0 saved</span></div><div class="jw-intel-shot"><strong>GPT-5.6 context signal</strong><span>IT之家 · 行业 · 可收藏为素材</span></div></div>
+                    <div class="jw-panel-shot"><div class="jw-panel-head-shot"><h3>Signals</h3><span>3 shown · 11 hidden</span></div><div class="jw-signal-shot"><strong>UAT 与 Bug Review 冲突</strong><span>Calendar · High · 打开来源</span></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">1 / 12</div>
+    </section>
+
+    <section class="slide" data-title="Source">
+      <div class="deck-brand">PM OS Workbench</div>
+      <div class="slide-content">
+        <h2 class="slide-title reveal">第一层是 AI 可读的本地事实源</h2>
+        <div class="method-grid reveal d1">
+          <div class="stack">
+            <div class="card"><span class="label">Obsidian</span><h3>Markdown 文件管理器</h3><p>日记、Inbox、项目卡、报告和 Skill 都是普通文件，目录结构就是 Agent 的工作上下文。</p></div>
+            <div class="card"><span class="label">Source shape</span><h3>文件承担不同职责</h3><p>临时输入、项目事实、AI 输出和候选内容分开放，Codex 可以搜、读、写、看 diff。</p></div>
+            <div class="card"><span class="label">PM control</span><h3>事实源由人维护</h3><p>AI 写候选和报告，项目事实经过确认后进入项目卡。</p></div>
+          </div>
+          <div class="method-board">
+            <div class="source-stack">
+              <div class="source-file"><b>Source</b><strong>Daily / Inbox / Logs</strong><span>原始记录、临时捕获、沟通线索。</span><code>- [ ] #task follow owner
+meeting note: UAT risk</code></div>
+              <div class="source-file"><b>Fact</b><strong>Projects/Active</strong><span>项目状态、进展、风险和 timeline。</span><code>status: prd
+progress: sample ready
+next: align owner</code></div>
+              <div class="source-file"><b>Generated</b><strong>Reports / Candidates</strong><span>AI、脚本和 connector 生成的可确认输出。</span><code>brief -> candidate
+review -> human confirm</code></div>
+            </div>
+            <div class="method-output"><div><strong>文件夹就是 AI 的数据库</strong><span>Codex 按路径读取：Inbox 是输入，Projects 是项目事实，Reports 是输出和候选。</span></div><code>source map</code></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">2 / 12</div>
+    </section>
+
+    <section class="slide" data-title="Tools">
+      <div class="deck-brand">PM OS Workbench</div>
+      <div class="slide-content">
+        <h2 class="slide-title reveal">第二层工具：MCP、CLI、Skill 让 Codex 能行动</h2>
+        <div class="concept-layout reveal d1">
+          <figure class="concept-figure">
+            <img src="slide-2026-05-25-ai-workflow-concept.png" alt="AI workflow concept illustration">
+            <div class="concept-callout callout-source"><b>1</b><div><strong>本地事实源</strong><span>Markdown vault / project cards / reports</span></div></div>
+            <div class="concept-callout callout-tools"><b>2</b><div><strong>工具入口</strong><span>MCP / CLI / Skill</span></div></div>
+            <div class="concept-callout callout-agent"><b>3</b><div><strong>Codex Agent</strong><span>读上下文，生成候选</span></div></div>
+            <div class="concept-callout callout-output"><b>4</b><div><strong>Workbench</strong><span>日常确认入口</span></div></div>
+          </figure>
+          <div class="concept-side">
+            <div class="flow-row"><b>1</b><div><strong>Obsidian</strong><span>把文件存好，像本地数据库一样给 AI 读取。</span></div><code>src</code></div>
+            <div class="flow-row"><b>2</b><div><strong>MCP / CLI / Skill</strong><span>MCP 读外部系统，CLI 跑脚本，Skill 写清怎么跑。</span></div><code>tool</code></div>
+            <div class="flow-row"><b>3</b><div><strong>Codex Agent</strong><span>做项目归类、进度摘要、日程和邮件 brief。</span></div><code>agent</code></div>
+            <div class="flow-row"><b>4</b><div><strong>Workbench</strong><span>候选、报告和动作结果进入日常确认面。</span></div><code>ui</code></div>
+            <div class="method-output"><div><strong>工具链让 Codex 可执行</strong><span>资料、工具、Agent、工作台四段连起来，个人流程就能变成可复跑动作。</span></div><code>chain</code></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">3 / 12</div>
+    </section>
+
+    <section class="slide" data-title="Contract">
+      <div class="deck-brand">PM OS Workbench</div>
+      <div class="slide-content">
+        <h2 class="slide-title reveal">每个 AI 动作都要说清：读什么、跑什么、写哪里</h2>
+        <div class="contract-board reveal d1">
+          <div class="contract-grid">
+            <div class="contract-card"><b>1</b><strong>Input</strong><span>Markdown 文件、connector brief、网页 feed、项目卡和候选文件。</span></div>
+            <div class="contract-card"><b>2</b><strong>Run</strong><span>Codex skill、MCP brief、`vault.mjs` 命令或本地 command 文件。</span></div>
+            <div class="contract-card"><b>3</b><strong>Output</strong><span>Calendar Brief、Email Brief、AI HOT digest、项目候选、任务归属候选。</span></div>
+            <div class="contract-card"><b>4</b><strong>Confirm</strong><span>PM 打开候选或 modal，确认后写回项目事实源。</span></div>
+          </div>
+          <div class="method-output"><div><strong>Workbench 把动作入口和结果放到前台</strong><span>每个按钮都知道读什么、跑什么、写到哪里，PM 只确认结果。</span></div><code>action path</code></div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">4 / 12</div>
+    </section>
+
+    <section class="slide" data-title="Workbench">
+      <div class="deck-brand">PM OS Workbench</div>
+      <div class="slide-content">
+        <h2 class="slide-title reveal">Codex 把作业链收束成 Workbench 操作面</h2>
+        <div class="artifact-grid visual-left reveal d1">
+          <div class="wb-frame">
+            <div class="wb-topbar"><span class="traffic"><i></i><i></i><i></i></span><span>Jalen Workbench</span><span class="sample-badge">Sample data</span></div>
+            <div class="wb-body">
+              <div class="wb-sidebar">⌂<br>⌕<br>▦<br>☰<br>⌘</div>
+              <div class="wb-canvas">
+                <div class="jw-shell-shot">
+                  <div class="jw-header-shot"><div><span class="jw-eyebrow-shot">Tue, May 26</span><h2>Jalen Workbench</h2><p>1 P0 · 14 signals · 1 milestones · 16 review</p></div><div class="jw-status-shot">Today</div></div>
+                  <div class="jw-tabs-shot">
+                    <div class="jw-tab-shot active"><span>Todo</span><strong>20</strong></div>
+                    <div class="jw-tab-shot"><span>Signals</span><strong>14</strong></div>
+                    <div class="jw-tab-shot"><span>Projects</span><strong>9</strong></div>
+                    <div class="jw-tab-shot"><span>Review</span><strong>16</strong></div>
+                    <div class="jw-tab-shot"><span>System</span><strong>OK</strong></div>
+                  </div>
+                  <div class="jw-dashboard-shot">
+                    <div class="jw-panel-shot primary">
+                      <div class="jw-panel-head-shot"><h3>Todo</h3><span>20 open · 8 inbox · 1 focus</span></div>
+                      <div class="jw-input-shot"><input value="新增待办，Enter 保存"><button>新增</button></div>
+                      <div class="focus-inline-shot"><div class="focus-head-shot"><strong>Focus</strong><span>1 P0 · 0 wait · 0 sync</span></div><div class="focus-chips-shot"><span>1 P0</span><span>0 Wait</span><span>0 Sync</span></div><div class="jw-task-shot" data-urgent="true"><span class="check"></span><span><strong>Auto Greeting PRD 优先完成</strong><em>Inbox/收件箱.md:12</em></span></div></div>
+                      <div class="jw-task-shot"><span class="check"></span><span><strong>确认日程冲突取舍</strong><em>Reports/Calendar Brief.md</em></span></div>
+                    </div>
+                    <div class="rail-stack-shot">
+                      <div class="jw-panel-shot"><div class="jw-panel-head-shot"><h3>AI Hot</h3><span>7 unread · 0 saved</span></div><div class="jw-intel-shot"><strong>Grok Build Beta</strong><span>X · 产品 · 收藏为素材</span></div></div>
+                      <div class="jw-panel-shot"><div class="jw-panel-head-shot"><h3>Signals</h3><span>3 shown · 11 hidden</span></div><div class="jw-signal-shot"><strong>UAT 与 review 冲突</strong><span>Calendar · high</span></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="card"><span class="label">Entry</span><h3>五个入口承接五类确认</h3><p>Todo 处理输入，Signals 看外部变化，Projects 校正事实，Review 看候选，System 跑工具。</p></div>
+            <div class="card"><span class="label">Header</span><h3>顶部展示当前工作状态</h3><p>Header 直接显示 P0、signals、milestones 和 review 数量，帮助决定先处理什么。</p></div>
+            <div class="card"><span class="label">Local output</span><h3>结果回到本地文件</h3><p>所有动作最终指向 Inbox、Projects、Reports 或候选文件，方便复查和继续加工。</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">5 / 12</div>
+    </section>
+
+    <section class="slide" data-title="Today">
+      <div class="deck-brand">PM OS Workbench</div>
+      <div class="slide-content">
+        <h2 class="slide-title reveal">Today 把输入、焦点和信号放在同一个决策面</h2>
+        <div class="two-col visual-left reveal d1">
+          <div class="wb-frame">
+            <div class="wb-topbar"><span class="traffic"><i></i><i></i><i></i></span><span>Jalen Workbench</span><span class="sample-badge">Sample data</span></div>
+            <div class="wb-body">
+              <div class="wb-sidebar">⌂<br>⌕<br>▦<br>☰<br>⌘</div>
+              <div class="wb-canvas">
+                <div class="jw-shell-shot">
+                  <div class="jw-header-shot"><div><span class="jw-eyebrow-shot">Tue, May 26</span><h2>Jalen Workbench</h2><p>1 P0 · 14 signals · 1 milestones · 16 review</p></div><div class="jw-status-shot">Today</div></div>
+                  <div class="jw-tabs-shot"><div class="jw-tab-shot active"><span>Todo</span><strong>20</strong></div><div class="jw-tab-shot"><span>Signals</span><strong>14</strong></div><div class="jw-tab-shot"><span>Projects</span><strong>9</strong></div><div class="jw-tab-shot"><span>Review</span><strong>16</strong></div><div class="jw-tab-shot"><span>System</span><strong>OK</strong></div></div>
+                  <div class="jw-dashboard-shot">
+                    <div class="jw-panel-shot primary">
+                      <div class="jw-panel-head-shot"><h3>Todo</h3><span>20 open · 8 inbox · 1 focus</span></div>
+                      <div class="jw-input-shot"><input value="新增待办，Enter 保存"><button>新增</button></div>
+                      <div class="focus-inline-shot"><div class="focus-head-shot"><strong>Focus</strong><span>1 P0 · 0 wait · 0 sync</span></div><div class="focus-chips-shot"><span>1 P0</span><span>0 Wait</span><span>0 Sync</span></div><div class="jw-task-shot" data-urgent="true"><span class="check"></span><span><strong>Auto Greeting PRD 优先完成</strong><em>Inbox/收件箱.md:12</em></span></div></div>
+                      <div class="jw-list-shot"><div class="jw-task-shot"><span class="check"></span><span><strong>整理项目进度摘要</strong><em>Reports/项目进度摘要.md</em></span></div></div>
+                    </div>
+                    <div class="rail-stack-shot">
+                      <div class="jw-panel-shot"><div class="jw-panel-head-shot"><h3>AI Hot</h3><span>7 unread · 0 saved</span></div><div class="jw-intel-shot"><strong>OpenAI context signal</strong><span>摘要 · 收藏 · 原文</span><div class="jw-actions-shot"><span class="jw-pill">已读</span><span class="jw-pill primary">收藏</span></div></div></div>
+                      <div class="jw-panel-shot"><div class="jw-panel-head-shot"><h3>Signals</h3><span>3 shown · 11 hidden</span></div><div class="jw-signal-shot"><strong>今天 11:30 日程冲突</strong><span>Calendar · High</span></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flow">
+            <div class="flow-row"><b>1</b><div><strong>新增待办写入本地文件</strong><span>在 Workbench 输入一句话，自动变成 Markdown 任务，后续可归类。</span></div><code>capture</code></div>
+            <div class="flow-row"><b>2</b><div><strong>从代办中抽出 Focus</strong><span>把 P0、等待别人、需要同步的任务抽出来，先看真正要处理的事。</span></div><code>focus</code></div>
+            <div class="flow-row"><b>3</b><div><strong>邮件、日程、AI 动态放在右侧</strong><span>摘要未读邮件和当天日程；AI Hot 同步最新 AI 动态。</span></div><code>decide</code></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">6 / 12</div>
+    </section>
+
+    <section class="slide" data-title="Signals">
+      <div class="deck-brand">PM OS Workbench</div>
+      <div class="slide-content">
+        <h2 class="slide-title reveal">Signals 把外部变化压缩成本地响应队列</h2>
+        <div class="two-col visual-first reveal d1">
+          <div class="flow">
+            <div class="flow-row"><b>1</b><div><strong>Calendar / Email</strong><span>Codex brief 提取冲突、need reply、sign-off 和证据链接。</span></div><code>brief</code></div>
+            <div class="flow-row"><b>2</b><div><strong>AI Hot</strong><span>把常看的 AI 进展页面接进 Workbench，直接读摘要，感兴趣的收藏到 Obsidian。</span></div><code>digest</code></div>
+            <div class="flow-row"><b>3</b><div><strong>Milestones / Jira</strong><span>项目 timeline 和 Jira 只读异常进入同一个排序队列。</span></div><code>signal</code></div>
+          </div>
+          <figure class="pdm-demo signal-motion" data-start="0" data-duration="9" data-track-index="1">
+            <div class="pdm-stage pdm-base">
+              <div class="wb-frame">
+                <div class="wb-topbar"><span class="traffic"><i></i><i></i><i></i></span><span>Jalen Workbench</span><span class="sample-badge">Sample data</span></div>
+                <div class="wb-body">
+                  <div class="wb-sidebar">⌂<br>⌕<br>▦<br>☰<br>⌘</div>
+                  <div class="wb-canvas">
+                    <div class="jw-shell-shot signals-view">
+                      <div class="jw-header-shot"><div><span class="jw-eyebrow-shot">Tue, May 26</span><h2>Jalen Workbench</h2><p>1 P0 · 14 signals · 1 milestones · 16 review</p></div><div class="jw-status-shot">Signals</div></div>
+                      <div class="jw-tabs-shot"><div class="jw-tab-shot"><span>Todo</span><strong>20</strong></div><div class="jw-tab-shot active"><span>Signals</span><strong>14</strong></div><div class="jw-tab-shot"><span>Projects</span><strong>9</strong></div><div class="jw-tab-shot"><span>Review</span><strong>16</strong></div><div class="jw-tab-shot"><span>System</span><strong>OK</strong></div></div>
+                      <div class="signal-grid-shot">
+                        <div class="jw-panel-shot"><div class="jw-panel-head-shot"><h3>Signals</h3><span>what changed outside Todo</span></div><div class="jw-signal-shot"><strong>今天 11:30 日程冲突</strong><span>Calendar · High · open source</span></div><div class="jw-signal-shot"><strong>Prompt Management UAT</strong><span>UAT · 2026-06-08 · 13 天后</span></div></div>
+                        <div class="jw-panel-shot"><div class="jw-panel-head-shot"><h3>AI Hot</h3><span>7 unread · 0 saved</span></div><div class="jw-intel-shot"><strong>OpenAI GPT-5.6 context signal</strong><span>IT之家 · 行业 · 摘要已生成</span><div class="jw-actions-shot"><span class="jw-pill">已读</span><span class="jw-pill primary">收藏</span><span class="jw-pill">原文</span></div></div><div class="jw-intel-shot"><strong>Grok Build Beta</strong><span>X · 产品 · 摘要已生成</span></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pdm-dim"></div>
+            <span class="pdm-cursor"></span>
+            <span class="pdm-click"></span>
+            <div class="pdm-lens">
+              <div class="pdm-lens-head"><h3>收藏外部信号</h3><span class="jw-pill primary">收藏</span></div>
+              <p>点击收藏后，Workbench 调用 `favoriteAiHot(item)`，把网页摘要写入本地素材文件。</p>
+              <div class="pdm-mini-code"><span>input -> AI HOT digest item</span><span>handler -> favoriteAiHot(item)</span><span>output -> Reports/AI HOT 收藏.md</span></div>
+              <div class="pdm-result-card"><strong>结果：</strong>收藏后的 AI 动态进入 Obsidian，后续项目复盘和判断可以继续读取。</div>
+            </div>
+          </figure>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">7 / 12</div>
+    </section>
+
+    <section class="slide" data-title="Projects">
+      <div class="deck-brand">PM OS Workbench</div>
+      <div class="slide-content">
+        <h2 class="slide-title reveal">Projects 把项目事实卡变成可校正对象</h2>
+        <div class="two-col visual-left reveal d1">
+          <figure class="pdm-demo project-motion" data-start="0" data-duration="9" data-track-index="2">
+            <div class="pdm-stage pdm-base">
+              <div class="wb-frame">
+                <div class="wb-topbar"><span class="traffic"><i></i><i></i><i></i></span><span>Jalen Workbench</span><span class="sample-badge">Sample data</span></div>
+                <div class="wb-body">
+                  <div class="wb-sidebar">⌂<br>⌕<br>▦<br>☰<br>⌘</div>
+                  <div class="wb-canvas">
+                    <div class="jw-shell-shot project-view">
+                      <div class="jw-header-shot"><div><span class="jw-eyebrow-shot">Tue, May 26</span><h2>Jalen Workbench</h2><p>1 P0 · 14 signals · 1 milestones · 16 review</p></div><div class="jw-status-shot">Projects</div></div>
+                      <div class="jw-tabs-shot"><div class="jw-tab-shot"><span>Todo</span><strong>20</strong></div><div class="jw-tab-shot"><span>Signals</span><strong>14</strong></div><div class="jw-tab-shot active"><span>Projects</span><strong>9</strong></div><div class="jw-tab-shot"><span>Review</span><strong>16</strong></div><div class="jw-tab-shot"><span>System</span><strong>OK</strong></div></div>
+                      <div class="jw-panel-shot">
+                        <div class="jw-panel-head-shot"><h3>Projects</h3><span>active project control</span></div>
+                        <div class="jw-actions-shot"><span class="jw-pill">矫正进度</span><span class="jw-pill primary">状态/归档</span><span class="jw-pill">归档文档</span><span class="jw-pill">时间线提醒</span><span class="jw-pill">重复项目</span><span class="jw-pill">主题目录</span></div>
+                        <div class="project-list">
+                          <div class="jw-project-shot"><div class="project-top-shot"><span class="project-status-shot">prd</span><strong>Prompt Management</strong></div><span>agent workflow · prompt module</span><p>progress: PRD sample ready; timeline: UAT 2026-06-08</p><div class="project-foot-shot"><span>Next: align rollout</span><span>Risk: sign-off</span></div></div>
+                          <div class="jw-project-shot"><div class="project-top-shot"><span class="project-status-shot">backlog</span><strong>Feedback Review Workflow</strong></div><span>AI product ops · routing</span><p>progress: sample pipeline ready</p><div class="project-foot-shot"><span>Next: compare labels</span><span>Risk: owner</span></div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pdm-dim"></div>
+            <span class="pdm-cursor"></span>
+            <span class="pdm-click"></span>
+            <div class="pdm-lens">
+              <div class="pdm-lens-head"><h3>项目状态/归档</h3><span class="jw-pill primary">保存状态</span></div>
+              <div class="project-modal-shot">
+                <div class="project-modal-row-shot"><span>搜索项目</span><span>Prompt Management</span></div>
+                <div class="project-modal-row-shot"><span>状态</span><span>uat</span></div>
+                <div class="project-modal-row-shot"><span>后续动作</span><span>对齐 owner 和灰度风险</span></div>
+              </div>
+              <div class="pdm-mini-code"><span>button -> openStatusModal()</span><span>save -> scripts/vault.mjs project-status</span><span>output -> Projects/Active/*.md or Done/*.md</span></div>
+              <div class="pdm-result-card"><strong>结果：</strong>项目卡通过本地命令更新；状态、next 和说明保持在事实源里。</div>
+            </div>
+          </figure>
+          <div class="flow">
+            <div class="flow-row"><b>1</b><div><strong>从 Jira 和周会同步读项目状态</strong><span>进展、风险、owner 和 timeline 先进入本地项目卡。</span></div><code>fact</code></div>
+            <div class="flow-row"><b>2</b><div><strong>用按钮更新项目状态</strong><span>矫正进度、变更状态、归档文档、检查重复项目，结果写回项目卡。</span></div><code>command</code></div>
+            <div class="flow-row"><b>3</b><div><strong>输出继续服务项目判断</strong><span>项目事实、归档候选和主题目录继续被 Codex 读取，用于复盘和下一步判断。</span></div><code>reuse</code></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">8 / 12</div>
+    </section>
+
+    <section class="slide" data-title="Review System">
+      <div class="deck-brand">PM OS Workbench</div>
+      <div class="slide-content">
+        <h2 class="slide-title reveal">Review / System 把 Skill 和工具接到工作台</h2>
+        <div class="two-col visual-left reveal d1">
+          <div class="wb-frame">
+            <div class="wb-topbar"><span class="traffic"><i></i><i></i><i></i></span><span>Jalen Workbench</span><span class="sample-badge">Sample data</span></div>
+            <div class="wb-body">
+              <div class="wb-sidebar">⌂<br>⌕<br>▦<br>☰<br>⌘</div>
+              <div class="wb-canvas">
+                <div class="jw-shell-shot review-view">
+                  <div class="jw-header-shot"><div><span class="jw-eyebrow-shot">Tue, May 26</span><h2>Jalen Workbench</h2><p>1 P0 · 14 signals · 1 milestones · 16 review</p></div><div class="jw-status-shot">Review</div></div>
+                  <div class="jw-tabs-shot"><div class="jw-tab-shot"><span>Todo</span><strong>20</strong></div><div class="jw-tab-shot"><span>Signals</span><strong>14</strong></div><div class="jw-tab-shot"><span>Projects</span><strong>9</strong></div><div class="jw-tab-shot active"><span>Review</span><strong>16</strong></div><div class="jw-tab-shot"><span>System</span><strong>OK</strong></div></div>
+                  <div class="jw-two-shot">
+                    <div class="jw-panel-shot"><div class="jw-panel-head-shot"><h3>Review</h3><span>task routing</span></div><div class="jw-row-shot"><strong>跟进项目状态归档候选</strong><span>Prompt Management · high · Inbox/收件箱.md</span></div><div class="jw-row-shot"><strong>整理模型预算复盘输入</strong><span>未归属 · medium · Daily/2026-05-26.md</span></div><div class="jw-actions-shot"><span class="jw-pill primary">归属候选</span><span class="jw-pill">沉淀候选</span><span class="jw-pill">打开候选</span></div></div>
+                    <div class="jw-panel-shot"><div class="jw-panel-head-shot"><h3>System</h3><span>tools</span></div><div class="skill-grid-shot"><div class="skill-card-shot"><h4>Calendar Brief</h4><p>读取 Calendar connector，写本地报告。</p><em>Reports/Calendar Brief.md</em></div><div class="skill-card-shot"><h4>Task Routing</h4><p>读 Inbox / Daily，输出归属候选。</p><em>Projects/任务归属候选.md</em></div><div class="skill-card-shot"><h4>Project Review</h4><p>读项目卡，输出进度摘要。</p><em>Reports/Project Review.md</em></div></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flow">
+            <div class="flow-row"><b>1</b><div><strong>Review 看候选</strong><span>`classify-tasks` 和 `settle-tasks` 只输出候选，方便 PM 判断归属和沉淀。</span></div><code>candidate</code></div>
+            <div class="flow-row"><b>2</b><div><strong>Skill 绑定具体工具</strong><span>每个 Skill 写清输入文件、调用哪个命令或 connector、输出到哪里。</span></div><code>bind</code></div>
+            <div class="flow-row"><b>3</b><div><strong>从按钮跑到结果</strong><span>Workbench 触发入口；Skill 调 MCP/CLI，Reports 保存结果和错误信息。</span></div><code>operate</code></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">9 / 12</div>
+    </section>
+
+    <section class="slide" data-title="Action Map">
+      <div class="deck-brand">PM OS Workbench</div>
+      <div class="slide-content">
+        <h2 class="slide-title reveal">Workbench 按钮把 source、tool 和 output 串起来</h2>
+        <div class="qa-grid reveal d1">
+          <div class="stack">
+            <div class="card"><span class="label">Source</span><h3>按钮先明确读什么</h3><p>任务、日程、邮件、AI Hot、项目卡都对应前面定义好的资料源。</p></div>
+            <div class="card"><span class="label">Tool</span><h3>再明确调用什么</h3><p>MCP 读外部系统，CLI 跑本地脚本，Skill 记录执行口径。</p></div>
+            <div class="card"><span class="label">Output</span><h3>最后明确写哪里</h3><p>输出回到 Reports、Candidates 或 Projects，PM 决定是否写回事实源。</p></div>
+          </div>
+          <div class="contract-board">
+            <div class="flow">
+              <div class="flow-row"><b>1</b><div><strong>Source</strong><span>从 Inbox、Calendar、Email、AI Hot、Jira 或项目卡读取上下文。</span></div><code>read</code></div>
+              <div class="flow-row"><b>2</b><div><strong>Tool</strong><span>用 MCP、CLI 或 Skill 执行摘要、归类、检查、更新。</span></div><code>run</code></div>
+              <div class="flow-row"><b>3</b><div><strong>Agent</strong><span>Codex 根据资料和规则生成候选结果。</span></div><code>draft</code></div>
+              <div class="flow-row"><b>4</b><div><strong>Output</strong><span>结果写到 Reports、Candidates 或 Projects。</span></div><code>write</code></div>
+              <div class="flow-row"><b>5</b><div><strong>Confirm</strong><span>PM 在 Workbench 判断是否采纳或继续处理。</span></div><code>decide</code></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">10 / 12</div>
+    </section>
+
+    <section class="slide" data-title="Reuse">
+      <div class="deck-brand">PM OS Workbench</div>
+      <div class="slide-content">
+        <h2 class="slide-title reveal">这套 Codex 作业链可以复制到每个人自己的 PM 工具</h2>
+        <div class="method-board reveal d1">
+          <div class="method-chain">
+            <div class="method-step"><b>1</b><strong>定义资料源</strong><span>哪些内容放 Markdown，哪些来自 MCP，哪些留在外部系统。</span></div>
+            <div class="method-step"><b>2</b><strong>定义动作</strong><span>哪些用 Codex skill，哪些用本地 CLI，哪些需要人工确认。</span></div>
+            <div class="method-step"><b>3</b><strong>定义输出</strong><span>报告、候选、项目卡和素材库各自保存什么。</span></div>
+            <div class="method-step"><b>4</b><strong>定义入口</strong><span>把高频确认动作放到每天会打开的界面。</span></div>
+          </div>
+          <div class="arrow-text">source -> action -> output -> daily surface</div>
+          <div class="method-output"><div><strong>产品形态来自个人作业链</strong><span>先把 AI 使用资料和工具的方式跑顺，再把高频动作前台化。</span></div><code>DIY PM tool</code></div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">11 / 12</div>
+    </section>
+
+    <section class="slide" data-title="Takeaway">
+      <div class="deck-brand">PM OS Workbench</div>
+      <div class="slide-content takeaway">
+        <div class="reveal">
+          <h2>把 Codex 用法沉淀成工作方式</h2>
+          <div class="cover-rule"></div>
+          <p class="cover-meta">Workbench 是 Codex 跑通这套作业链后的一个样例：资料源清楚、工具入口清楚、输出位置清楚、确认边界清楚。</p>
+        </div>
+        <div class="stack reveal d1">
+          <div class="flow-row"><b>1</b><div><strong>资料进入 AI 能读的位置</strong><span>Markdown vault、connector brief、网页 digest 和项目卡形成稳定上下文。</span></div><code>context</code></div>
+          <div class="flow-row"><b>2</b><div><strong>工具层承接具体任务</strong><span>MCP 读外部系统，CLI 跑脚本，Skill 写清步骤，Codex 负责串起来。</span></div><code>tools</code></div>
+          <div class="flow-row"><b>3</b><div><strong>确认进入自己的工作台</strong><span>每天只处理输入、信号、项目事实、候选和工具运行结果。</span></div><code>surface</code></div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">12 / 12</div>
+    </section>
+  </main>
+  <div class="dots" id="dots"></div>
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const dots = document.getElementById("dots");
+    let index = 0;
+    let wheelLocked = false;
+    let touchStartX = 0;
+
+    slides.forEach((slide, i) => {
+      const pageNum = slide.querySelector(".page-num");
+      if (pageNum) pageNum.textContent = `${i + 1} / ${slides.length}`;
+    });
+
+    slides.forEach((_, i) => {
+      const dot = document.createElement("button");
+      dot.className = "dot";
+      dot.type = "button";
+      dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
+      dot.addEventListener("click", () => go(i));
+      dots.appendChild(dot);
+    });
+
+    function go(next) {
+      index = Math.max(0, Math.min(slides.length - 1, next));
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("visible", i === index);
+      });
+      Array.from(dots.children).forEach((dot, i) => {
+        dot.classList.toggle("active", i === index);
+      });
+      history.replaceState(null, "", `#slide-${index + 1}`);
+    }
+
+    function fromHash() {
+      const match = location.hash.match(/slide-(\d+)/);
+      if (match) return Math.max(0, Math.min(slides.length - 1, Number(match[1]) - 1));
+      return 0;
+    }
+
+    window.addEventListener("keydown", event => {
+      if (event.key === "ArrowRight" || event.key === " " || event.key === "PageDown") go(index + 1);
+      if (event.key === "ArrowLeft" || event.key === "PageUp") go(index - 1);
+      if (event.key === "Home") go(0);
+      if (event.key === "End") go(slides.length - 1);
+    });
+
+    window.addEventListener("wheel", event => {
+      if (wheelLocked || Math.abs(event.deltaY) < 20) return;
+      wheelLocked = true;
+      go(index + (event.deltaY > 0 ? 1 : -1));
+      setTimeout(() => { wheelLocked = false; }, 420);
+    }, { passive: true });
+
+    window.addEventListener("touchstart", event => {
+      touchStartX = event.changedTouches[0].clientX;
+    }, { passive: true });
+
+    window.addEventListener("touchend", event => {
+      const delta = event.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(delta) > 50) go(index + (delta < 0 ? 1 : -1));
+    }, { passive: true });
+
+    go(fromHash());
+  </script>
+</body>
+</html>

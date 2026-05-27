@@ -1,0 +1,975 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shopee HTML Slide Template - Real Assets</title>
+  <style>
+    @font-face {
+      font-family: "ShopeeFont";
+      src: url("assets/shopee-design/typography/ShopeeFont/OpenType-TT/ShopeeFont-Regular.ttf") format("truetype");
+      font-weight: 400;
+    }
+
+    @font-face {
+      font-family: "ShopeeFont";
+      src: url("assets/shopee-design/typography/ShopeeFont/OpenType-TT/ShopeeFont-Bold.ttf") format("truetype");
+      font-weight: 800;
+    }
+
+    :root {
+      --orange: #ee4d2d;
+      --orange-2: #ff6600;
+      --ink: #111111;
+      --muted: #6f6f6f;
+      --line: rgba(238, 77, 45, 0.38);
+      --soft: #fff5f1;
+      --soft-2: #f8f8f8;
+      --green: #2c7a5f;
+      --blue: #245a8d;
+      --font: "ShopeeFont", Arial, "Noto Sans SC", sans-serif;
+      --shadow: 0 18px 44px rgba(17, 17, 17, 0.08);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #ffffff;
+      font-family: var(--font);
+      letter-spacing: 0;
+      overflow: hidden;
+    }
+
+    #deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      background: #ffffff;
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      display: none;
+      position: absolute;
+      inset: 0;
+      padding: 46px 78px 42px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    .bag-mark {
+      display: block;
+      width: 30px;
+      height: 30px;
+      background: url("assets/shopee-design/logo/shopee-bag-mark.png") center / contain no-repeat;
+      border-radius: 6px;
+    }
+
+    .title {
+      align-items: start;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      column-gap: 14px;
+      margin: 42px 0 18px;
+      max-width: 1120px;
+      color: var(--orange);
+      font-size: 38px;
+      line-height: 1.16;
+      font-weight: 800;
+    }
+
+    .title::before {
+      content: "";
+      width: 42px;
+      height: 42px;
+      margin-top: 1px;
+      background: url("assets/shopee-design/logo/shopee-bag-mark.png") center / contain no-repeat;
+      border-radius: 8px;
+    }
+
+    .rule {
+      width: 100%;
+      height: 4px;
+      background: var(--orange);
+      margin-bottom: 24px;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 22px;
+      left: 0;
+      right: 0;
+      color: #888888;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .page-num {
+      position: absolute;
+      right: 78px;
+      bottom: 22px;
+      color: #888888;
+      font-size: 12px;
+    }
+
+    .cover {
+      padding: 0;
+    }
+
+    .cover .topbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 360px;
+      height: 10px;
+      background: var(--orange);
+    }
+
+    .cover-layout {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 46% 54%;
+      align-items: stretch;
+    }
+
+    .cover-copy {
+      padding: 74px 0 70px 78px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .cover h1 {
+      align-items: start;
+      column-gap: 16px;
+      display: grid;
+      grid-template-columns: 68px minmax(0, 1fr);
+      margin: 0;
+      max-width: 680px;
+      color: var(--orange);
+      font-size: 76px;
+      line-height: 0.98;
+      font-weight: 800;
+    }
+
+    .cover h1::before {
+      content: "";
+      width: 64px;
+      height: 64px;
+      margin-top: 3px;
+      background: url("assets/shopee-design/logo/shopee-bag-mark.png") center / contain no-repeat;
+      border-radius: 10px;
+    }
+
+    .cover .cover-rule {
+      width: 420px;
+      height: 6px;
+      margin: 34px 0 24px;
+      background: var(--orange);
+    }
+
+    .cover .meta {
+      max-width: 470px;
+      color: #3b4b55;
+      font-size: 20px;
+      line-height: 1.45;
+    }
+
+    .cover-visual {
+      position: relative;
+      display: grid;
+      align-content: center;
+      padding: 84px 78px 92px 34px;
+    }
+
+    .office-photo {
+      height: 390px;
+      overflow: hidden;
+      border: 1px solid rgba(17, 17, 17, 0.12);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background: var(--soft-2);
+    }
+
+    .office-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 49% 52%;
+      display: block;
+    }
+
+    .cover-band {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 44px;
+      background: var(--orange);
+    }
+
+    .caption-pill {
+      position: absolute;
+      right: 96px;
+      bottom: 116px;
+      padding: 9px 14px;
+      border: 1px solid rgba(238, 77, 45, 0.35);
+      border-radius: 999px;
+      color: var(--orange);
+      background: rgba(255, 255, 255, 0.88);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 0.94fr 1.06fr;
+      gap: 28px;
+      height: calc(100vh - 285px);
+      min-height: 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .panel {
+      border: 1px solid rgba(17, 17, 17, 0.14);
+      border-radius: var(--radius);
+      background: #ffffff;
+      box-shadow: 0 10px 28px rgba(17, 17, 17, 0.04);
+      padding: 22px;
+      min-width: 0;
+    }
+
+    .panel.soft {
+      background: var(--soft);
+      border-color: rgba(238, 77, 45, 0.22);
+    }
+
+    .panel h3,
+    .tile h3 {
+      margin: 0 0 10px;
+      font-size: 21px;
+      line-height: 1.25;
+      font-weight: 800;
+    }
+
+    .eyebrow {
+      margin-bottom: 8px;
+      color: var(--orange);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    p {
+      margin: 0;
+      color: #33414a;
+      font-size: 15px;
+      line-height: 1.58;
+    }
+
+    .template-shots {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .shot {
+      overflow: hidden;
+      border: 1px solid rgba(17, 17, 17, 0.12);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .shot.wide {
+      grid-column: 1 / -1;
+    }
+
+    .shot img {
+      width: 100%;
+      height: 104px;
+      object-fit: cover;
+      object-position: top left;
+      display: block;
+    }
+
+    .shot.wide img {
+      height: 134px;
+    }
+
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .asset {
+      min-height: 94px;
+      border: 1px solid rgba(238, 77, 45, 0.22);
+      border-radius: var(--radius);
+      background: #ffffff;
+      padding: 14px;
+      display: grid;
+      align-content: start;
+      gap: 7px;
+    }
+
+    .asset img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .asset .bag-mark {
+      width: 36px;
+      height: 36px;
+      background-size: contain;
+    }
+
+    .asset strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .asset span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .tile {
+      border: 1px solid rgba(17, 17, 17, 0.14);
+      border-radius: var(--radius);
+      background: #ffffff;
+      padding: 22px;
+      min-height: 176px;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+    }
+
+    .tile img.icon {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .metric {
+      border: 1px solid rgba(238, 77, 45, 0.22);
+      border-radius: var(--radius);
+      background: var(--soft);
+      padding: 18px;
+    }
+
+    .metric b {
+      display: block;
+      color: var(--orange);
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    .metric span {
+      color: #33414a;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .kv-wrap {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 24px;
+      align-items: stretch;
+      height: calc(100vh - 270px);
+    }
+
+    .kv-img {
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid rgba(17, 17, 17, 0.12);
+      background: #ff6c20;
+      box-shadow: var(--shadow);
+    }
+
+    .kv-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .do-dont {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .rule-card {
+      border: 1px solid rgba(17, 17, 17, 0.14);
+      border-left: 6px solid var(--orange);
+      border-radius: var(--radius);
+      background: #ffffff;
+      padding: 18px 20px;
+    }
+
+    .rule-card.good {
+      border-left-color: var(--green);
+    }
+
+    .rule-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      align-items: stretch;
+      margin-top: 12px;
+    }
+
+    .flow-step {
+      position: relative;
+      min-height: 250px;
+      border: 1px solid rgba(17, 17, 17, 0.14);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      background: #ffffff;
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -11px;
+      top: 50%;
+      width: 18px;
+      height: 2px;
+      background: var(--orange);
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+
+    .flow-step img {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .flow-step strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-size: 17px;
+    }
+
+    .flow-step span {
+      color: #46555d;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .illustration-strip {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .illustration-strip .image-box {
+      height: 162px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(238, 77, 45, 0.2);
+      background: var(--soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .illustration-strip img {
+      max-width: 78%;
+      max-height: 92%;
+      object-fit: contain;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    th {
+      color: #ffffff;
+      background: var(--orange);
+      text-align: left;
+      padding: 13px 14px;
+      font-size: 13px;
+    }
+
+    td {
+      border-bottom: 1px solid rgba(17, 17, 17, 0.11);
+      padding: 14px;
+      vertical-align: top;
+    }
+
+    td:first-child {
+      font-weight: 800;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 10px;
+      border: 1px solid rgba(238, 77, 45, 0.3);
+      border-radius: 999px;
+      color: var(--orange);
+      background: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .closing {
+      display: grid;
+      gap: 20px;
+      align-content: center;
+      min-height: 0;
+    }
+
+    .closing h2 {
+      margin: 0;
+      color: var(--orange);
+      font-size: 38px;
+      line-height: 1.12;
+      font-weight: 800;
+    }
+
+    .matrix-layout {
+      display: grid;
+      grid-template-columns: 1.32fr 0.68fr;
+      gap: 22px;
+      height: calc(100vh - 250px);
+      min-height: 0;
+    }
+
+    .matrix-layout .panel {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .tracker {
+      border: 1px solid rgba(17, 17, 17, 0.14);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .track-row {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      align-items: center;
+      min-height: 68px;
+      border-bottom: 1px solid rgba(17, 17, 17, 0.1);
+    }
+
+    .track-row:last-child {
+      border-bottom: 0;
+    }
+
+    .track-row.active {
+      background: var(--orange);
+      color: #ffffff;
+    }
+
+    .track-row .n {
+      font-size: 21px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .track-row .name {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .track-row .note {
+      grid-column: 2;
+      margin-top: 2px;
+      color: inherit;
+      opacity: 0.78;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      position: fixed;
+      right: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: grid;
+      gap: 10px;
+      z-index: 20;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 0;
+      background: #d8d8d8;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: var(--orange);
+    }
+
+    .hint {
+      position: fixed;
+      right: 78px;
+      bottom: 42px;
+      color: #909090;
+      font-size: 11px;
+      z-index: 20;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: reveal 560ms ease forwards;
+    }
+
+    .d1 { animation-delay: 110ms; }
+    .d2 { animation-delay: 220ms; }
+    .d3 { animation-delay: 330ms; }
+    .d4 { animation-delay: 440ms; }
+
+    @keyframes reveal {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @media print {
+      body {
+        overflow: visible;
+      }
+
+      .slide {
+        display: block;
+        position: relative;
+        page-break-after: always;
+      }
+
+      .nav,
+      .hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main id="deck">
+    <section class="slide cover active" data-title="Cover">
+      <div class="topbar"></div>
+      <div class="cover-layout">
+        <div class="cover-copy">
+          <h1 class="reveal d1">Shopee HTML Slide Template</h1>
+          <div class="cover-rule reveal d2"></div>
+          <p class="meta reveal d3">真实资产校准版：以官方 Shopee frame 为底，借用高质量 HTML template 的结构能力。</p>
+        </div>
+        <div class="cover-visual">
+          <div class="office-photo reveal d2">
+            <img src="assets/shopee-design/image-library/office/shopee-logo-wall.jpg" alt="Shopee office logo wall" />
+          </div>
+          <div class="caption-pill reveal d3">Real Shopee asset</div>
+        </div>
+      </div>
+      <div class="cover-band"></div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">1 / 6</div>
+    </section>
+
+    <section class="slide" data-title="Calibration">
+      <h2 class="title reveal">官方模板确定边界，外部模板只提供结构灵感</h2>
+      <div class="rule reveal d1"></div>
+      <div class="grid-2">
+        <div class="panel reveal d2">
+          <div class="eyebrow">Google Slides reference</div>
+          <h3>不偏离的锚点</h3>
+          <div class="template-shots">
+            <div class="shot wide"><img src="assets/shopee-design/reference-slide-template-cover.png" alt="Shopee reference cover" /></div>
+            <div class="shot"><img src="assets/shopee-design/reference-slide-template-exec-summary.png" alt="Shopee reference executive summary" /></div>
+            <div class="shot"><img src="assets/shopee-design/reference-slide-template-tracker.png" alt="Shopee reference tracker" /></div>
+          </div>
+        </div>
+        <div class="panel soft reveal d3">
+          <div class="eyebrow">Real asset inventory</div>
+          <h3>模板默认只用已验证资产</h3>
+          <div class="asset-grid">
+            <div class="asset">
+              <img src="assets/shopee-design/icons/digital/platform.svg" alt="" />
+              <strong>Logo mark</strong>
+              <span>用于标题左侧 brand mark 和 cover。</span>
+            </div>
+            <div class="asset">
+              <img src="assets/shopee-design/icons/management/tools.svg" alt="" />
+              <strong>Icon Library</strong>
+              <span>Management / Digital 官方 SVG 图标。</span>
+            </div>
+            <div class="asset">
+              <img src="assets/shopee-design/illustrations/team-functions/team-winning.svg" alt="" />
+              <strong>Illustration</strong>
+              <span>Team Functions 官方插画，适合方法总结页。</span>
+            </div>
+            <div class="asset">
+              <img src="assets/shopee-design/icons/management/notes.svg" alt="" />
+              <strong>ShopeeFont</strong>
+              <span>本地 TTF + Arial / Noto Sans SC fallback。</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">2 / 6</div>
+    </section>
+
+    <section class="slide" data-title="Standard Content">
+      <h2 class="title reveal">标准内容页保持 Shopee frame，用更好的证据组件提升质感</h2>
+      <div class="rule reveal d1"></div>
+      <div class="grid-3 reveal d2">
+        <div class="tile">
+          <img class="icon" src="assets/shopee-design/icons/management/notes.svg" alt="" />
+          <div class="eyebrow">Source</div>
+          <h3>先放事实源</h3>
+          <p>用简洁面板呈现 Markdown、报告、任务或候选输出，避免抽象口号。</p>
+        </div>
+        <div class="tile">
+          <img class="icon" src="assets/shopee-design/icons/digital/platform.svg" alt="" />
+          <div class="eyebrow">System</div>
+          <h3>再呈现链路</h3>
+          <p>借 `Signal` 的 source-to-output 组织方式，让观众看懂 AI 读取了什么。</p>
+        </div>
+        <div class="tile">
+          <img class="icon" src="assets/shopee-design/icons/management/financial-report.svg" alt="" />
+          <div class="eyebrow">Evidence</div>
+          <h3>最后给结果</h3>
+          <p>借 `Blue Professional` 的 executive evidence rhythm，但保留 Shopee 配色。</p>
+        </div>
+      </div>
+      <div class="metric-row reveal d3">
+        <div class="metric"><b>01</b><span>官方 logo / font / icon 先落位</span></div>
+        <div class="metric"><b>02</b><span>标题继续使用 Shopee orange</span></div>
+        <div class="metric"><b>03</b><span>卡片只做轻边界和轻底色</span></div>
+        <div class="metric"><b>04</b><span>每页只讲一个 key message</span></div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">3 / 6</div>
+    </section>
+
+    <section class="slide" data-title="Campaign KV">
+      <h2 class="title reveal">Campaign KV 是真实视觉资产，但只在需要营销能量时放大</h2>
+      <div class="rule reveal d1"></div>
+      <div class="kv-wrap">
+        <div class="kv-img reveal d2">
+          <img src="assets/shopee-design/campaign-kv/2025-12-12-birthday-sale-16x9.png" alt="2025 12.12 Birthday Sale campaign KV" />
+        </div>
+        <div class="do-dont reveal d3">
+          <div class="rule-card good">
+            <h3>适合用法</h3>
+            <p>作为 campaign、brand example、视觉参考或封面强视觉；让观众看到真实 Shopee 资产。</p>
+          </div>
+          <div class="rule-card">
+            <h3>不默认使用</h3>
+            <p>内部 PM 方法分享不应每页铺 KV，否则会偏成营销物料，盖过方法和证据。</p>
+          </div>
+          <div class="rule-card">
+            <h3>转换原则</h3>
+            <p>提取能量、层级和色彩对比；不直接复制满屏促销语境到业务复盘页。</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">4 / 6</div>
+    </section>
+
+    <section class="slide" data-title="Workflow">
+      <h2 class="title reveal">AI 工作流页可以借 Signal 的链路感：source、tool、agent、artifact</h2>
+      <div class="rule reveal d1"></div>
+      <div class="flow reveal d2">
+        <div class="flow-step">
+          <img src="assets/shopee-design/icons/management/notes.svg" alt="" />
+          <strong>Markdown source</strong>
+          <span>任务、项目、报告和候选输出先成为 AI 可读上下文。</span>
+        </div>
+        <div class="flow-step">
+          <img src="assets/shopee-design/icons/management/tools.svg" alt="" />
+          <strong>MCP / CLI</strong>
+          <span>外部系统和本地脚本作为工具入口，不把逻辑藏在 UI 文案里。</span>
+        </div>
+        <div class="flow-step">
+          <img src="assets/shopee-design/icons/digital/privacy-check.svg" alt="" />
+          <strong>Skill</strong>
+          <span>把流程、边界、检查点和输出规范沉淀成 Agent 手册。</span>
+        </div>
+        <div class="flow-step">
+          <img src="assets/shopee-design/icons/digital/platform.svg" alt="" />
+          <strong>Codex Agent</strong>
+          <span>读取上下文，调用工具，生成候选，再等待人确认。</span>
+        </div>
+        <div class="flow-step">
+          <img src="assets/shopee-design/icons/management/calendar.svg" alt="" />
+          <strong>HTML deck</strong>
+          <span>最终产物仍然用 Shopee frame 和真实资产校准。</span>
+        </div>
+      </div>
+      <div class="illustration-strip reveal d3">
+        <div class="image-box"><img src="assets/shopee-design/illustrations/team-functions/team-winning.svg" alt="Shopee team illustration" /></div>
+        <p>这里借的是结构：像情报链路一样讲清楚“AI 使用了哪些信息源、调用了什么工具、产出了什么可审计结果”。</p>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">5 / 6</div>
+    </section>
+
+    <section class="slide" data-title="Borrowing Matrix">
+      <h2 class="title reveal">beautiful-html-templates 借结构，不借品牌皮肤</h2>
+      <div class="rule reveal d1"></div>
+      <div class="matrix-layout">
+        <div class="panel reveal d2">
+          <table>
+            <thead>
+              <tr>
+                <th>Template source</th>
+                <th>可以学习借鉴</th>
+                <th>Shopee 转换方式</th>
+                <th>边界</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Blue Professional</td>
+                <td>证据面板、metric row、executive rhythm</td>
+                <td><span class="tag">recolor</span> Shopee orange + neutral</td>
+                <td>不引入 cobalt / cream 主视觉</td>
+              </tr>
+              <tr>
+                <td>Signal</td>
+                <td>source-to-output 链路、hairline、时间线秩序</td>
+                <td><span class="tag">translate</span> AI 读资料、调工具、产出候选</td>
+                <td>不套 dark editorial / gold 语气</td>
+              </tr>
+              <tr>
+                <td>Raw Grid</td>
+                <td>表格密度、审计矩阵、grid alignment</td>
+                <td><span class="tag">soften</span> 降低 border weight</td>
+                <td>不使用粗黑框和 brutalist shadow</td>
+              </tr>
+              <tr>
+                <td>Long Table</td>
+                <td>长流程、ledger row、顺序型说明</td>
+                <td><span class="tag">sequence</span> action map / QA checklist</td>
+                <td>不引入 rust paper poster 风格</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel soft closing reveal d3">
+          <h2>Real assets first, design polish second</h2>
+          <div class="tracker">
+            <div class="track-row"><div class="n">1</div><div><div class="name">Official Shopee frame</div><div class="note">must keep</div></div></div>
+            <div class="track-row active"><div class="n">2</div><div><div class="name">Verified local assets</div><div class="note">default</div></div></div>
+            <div class="track-row"><div class="n">3</div><div><div class="name">Borrowed structure</div><div class="note">compatible only</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">Private & Confidential</div>
+      <div class="page-num">6 / 6</div>
+    </section>
+  </main>
+
+  <div class="nav" aria-label="Slide navigation"></div>
+  <div class="hint">← / → · Space · click dots</div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const nav = document.querySelector(".nav");
+    let index = 0;
+
+    slides.forEach((slide, i) => {
+      const button = document.createElement("button");
+      button.className = "dot" + (i === 0 ? " active" : "");
+      button.type = "button";
+      button.setAttribute("aria-label", `Go to slide ${i + 1}: ${slide.dataset.title}`);
+      button.addEventListener("click", () => show(i));
+      nav.appendChild(button);
+    });
+
+    const dots = Array.from(document.querySelectorAll(".dot"));
+
+    function show(next) {
+      index = Math.max(0, Math.min(slides.length - 1, next));
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("active", i === index);
+        if (i === index) {
+          slide.querySelectorAll(".reveal").forEach((node) => {
+            node.style.animation = "none";
+            node.offsetHeight;
+            node.style.animation = "";
+          });
+        }
+      });
+      dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+      location.hash = `slide-${index + 1}`;
+    }
+
+    window.addEventListener("keydown", (event) => {
+      if (["ArrowRight", "ArrowDown", " "].includes(event.key)) show(index + 1);
+      if (["ArrowLeft", "ArrowUp"].includes(event.key)) show(index - 1);
+      if (event.key === "Home") show(0);
+      if (event.key === "End") show(slides.length - 1);
+    });
+
+    const match = location.hash.match(/slide-(\d+)/);
+    if (match) show(Number(match[1]) - 1);
+  </script>
+</body>
+</html>

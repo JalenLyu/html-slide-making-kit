@@ -1,0 +1,4 @@
+openai:
+  display_name: "Jalen HTML Slide Copilot"
+  short_description: "Iterate Jialun's vault-based HTML slides and preserve reusable slide preferences."
+  default_prompt: "Use this skill to revise my current HTML slide deck, verify the rendered result, and update reusable slide preferences when my feedback should become a future default."
