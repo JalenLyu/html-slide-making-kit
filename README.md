@@ -11,7 +11,7 @@
 - `pm-os-workbench-product-motion-example.html`：带 product motion 的完整示例 deck。
 - `assets/shopee-design/`：模板和示例 deck 需要的本地图片、字体、图标和 KV 资产。
 - `slide-2026-05-25-ai-workflow-concept.png`：示例 deck 使用的概念图。
-- `skills/jalen-html-slide-copilot/`：面向 Jialun 工作流的 HTML slide 迭代 skill。
+- `skills/html-slide-copilot/`：通用 HTML slide 迭代、文案 QA、偏好沉淀和打包 skill。
 - `skills/frontend-slides/`：零依赖 HTML slides 的基础生成、动效和 viewport fitting skill。
 - `skills/shopee-html-slides/`：Shopee 风格 HTML slide 生成和 QA skill。
 - `skills/product-demo-motion/`：产品动效 slide 的检查与实现 skill。
@@ -49,7 +49,7 @@ open shopee-html-template-real-assets.html
 2. 用 `shopee-html-template-real-assets.html` 作为视觉基线，再读取 `skills/shopee-html-slides/SKILL.md` 生成 Shopee 风格 slide。
 3. 如果需要概念图或位图资产，读取 `skills/imagegen/SKILL.md`，生成后放回当前包的本地 assets。
 4. 如果需要产品演示动效，读取 `skills/product-demo-motion/SKILL.md`，先确认点击目标、处理函数、输出文件和结果状态。
-5. 用 `skills/jalen-html-slide-copilot/references/copywriting.md` 做文案 QA，避免把内部设计思路写进 slide。
+5. 用 `skills/html-slide-copilot/references/copywriting.md` 做文案 QA，避免把内部设计思路写进 slide。
 6. 用浏览器检查 16:9 PC 投影比例，优先修掉文本溢出、模块拥挤和动效错位。
 
 ## Quick QA
@@ -70,4 +70,4 @@ node skills/product-demo-motion/scripts/validate-product-demo-motion.mjs pm-os-w
 ## Notes Before Public Sharing
 
 - 包内包含 Shopee 风格资产和示例内容。公开分享前请确认这些资产和示例内容适合放到你的目标 GitHub repository。
-- Workbench deck 是方法演示样例，不建议把仓库标题或 README 写成 Workbench 产品介绍。
+- Product-motion example deck 是方法演示样例，不建议把仓库标题或 README 写成某个具体产品介绍。
