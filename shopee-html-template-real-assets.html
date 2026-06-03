@@ -558,12 +558,75 @@
       white-space: nowrap;
     }
 
-    .closing {
+    /* ── Data Table Variants ── */
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    tr.selected td { background: #fff3cc; font-weight: 800; }
+    tr.total td { background: #fff8e7; border-top: 2px solid var(--orange); font-weight: 800; }
+    td.latency-pass { color: #13774a; background: #edf8f0; font-weight: 800; }
+
+    /* ── Horizontal Bar Chart ── */
+    .bar-row {
       display: grid;
-      gap: 20px;
-      align-content: center;
-      min-height: 0;
+      grid-template-columns: clamp(28px, 3vw, 38px) 1fr clamp(42px, 4.6vw, 60px);
+      gap: clamp(8px, 1vw, 10px);
+      align-items: center;
+      font-size: clamp(10px, 1vw, 13px);
+      padding: clamp(4px, 0.7vw, 8px) 0;
     }
+    .bar-track {
+      height: clamp(13px, 1.5vw, 18px);
+      border-radius: 999px;
+      background: #edf1f5;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: var(--orange);
+    }
+    .bar-fill.blue { background: #174c77; }
+    .bar-value {
+      color: var(--ink);
+      font-weight: 800;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── Recommendation Cards ── */
+    .ops-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(14px, 1.8vw, 20px);
+    }
+    .ops-card {
+      border: 1px solid rgba(17, 17, 17, 0.14);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: clamp(16px, 1.8vw, 22px);
+    }
+
+    /* ── Section Label & Badge ── */
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: clamp(13px, 1.3vw, 16px);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: clamp(24px, 2.8vw, 32px);
+      height: clamp(24px, 2.8vw, 32px);
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-size: clamp(11px, 1.1vw, 14px);
+      font-weight: 800;
+    }
+
+    .closing {
 
     .closing h2 {
       margin: 0;
