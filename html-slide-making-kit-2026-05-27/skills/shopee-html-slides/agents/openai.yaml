@@ -1,8 +1,0 @@
-interface:
-  display_name: "Shopee HTML Slides"
-  short_description: "Shopee-style HTML slide generator"
-  brand_color: "#EE4D2D"
-  default_prompt: "Use $shopee-html-slides to create or review a Shopee-style HTML slide deck."
-
-policy:
-  allow_implicit_invocation: true
