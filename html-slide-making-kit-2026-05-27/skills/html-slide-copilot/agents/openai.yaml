@@ -1,0 +1,4 @@
+openai:
+  display_name: "HTML Slide Copilot"
+  short_description: "Create, revise, verify, package, and refine reusable HTML slide decks."
+  default_prompt: "Use this skill to revise the current HTML slide deck, verify the rendered result, package required assets, and update reusable slide preferences when feedback should become a future default."
