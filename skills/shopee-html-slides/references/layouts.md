@@ -16,6 +16,8 @@ Choose layouts based on the content's communication job, not visual variety.
 | `venn-or-overlap` | Relationship between factors | Diagram clarifies the concept; labels remain readable. |
 | `checklist` | QA rules, delivery checklist, acceptance criteria | Group checks logically; make scan path clear. |
 | `before-after-review` | Positive/negative examples, rewrite practice | Separate source and improved version; annotations should not overload the slide. |
+| `data-report` | Model comparison, cost breakdown, regional distribution | Table-driven evidence; title states the selection or conclusion, not just the topic. |
+| `bar-chart` | Regional percentage distribution without external libraries | Pure CSS bars with labels; use separator row for aggregate. |
 
 ## Deck Structure Pattern
 
@@ -29,6 +31,15 @@ For business reviews and project summaries:
 6. Findings and Discussion Points
 7. Conclusion and Next Steps
 8. Appendix or Checklist
+
+For data-heavy internal reports (model evaluation, cost estimation, feasibility study):
+
+1. Cover — text-only with topbar + bottom orange band, key-message title
+2. Executive Summary — 4 metric boxes + comparison table + one-line selection rationale
+3. Model/Data Detail — two-column: detail table (left) + trade-off analysis panel (right)
+4. Current Status — bar chart or distribution visualization as the primary evidence
+5. Cost/Budget Breakdown — cost table + assumption panel, cost distribution bars
+6. Recommendations & Next Steps — merged closing slide with structured rec cards
 
 ## Content Rules
 
