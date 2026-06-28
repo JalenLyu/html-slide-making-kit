@@ -21,6 +21,10 @@ Use this skill to turn content into Shopee-style HTML slides, or to review exist
 7. Run the checks in `references/qa-rubric.md` before calling the deck done.
 8. If the user provides Google Slides links, use `references/google-slides-read.md` for read-only template inspection.
 9. When the user gives preference feedback or says the output feels off, run the learning check in `references/reusable-viewpoints.md` before deciding whether to update the skill.
+10. For user-facing product intro decks, lead with what users can do, what they see, and how they decide next.
+11. Use saved UAT/product screenshots as visual truth. Do not redraw product UI unless requested.
+12. For shareable HTML decks, generate a self-contained HTML file with inline CSS and data-URI images.
+13. Run browser-rendered QA before delivery.
 
 ## Default Design Rules
 
@@ -43,6 +47,9 @@ Use this skill to turn content into Shopee-style HTML slides, or to review exist
 - If the working vault has `Skills/jalen-html-slide-copilot/references/shopee-design-sources.md`, read it before using logos, ShopeeFont, Campaign KV, or downloaded Shopee Design assets.
 - If the working vault has `Skills/jalen-html-slide-copilot/references/beautiful-html-templates.md`, use it as a refinement guide when the user asks for stronger design sense or explicitly mentions `beautiful-html-templates`.
 - If the working vault has `Reports/shopee-html-template-real-assets.html`, use it as the first local HTML template reference when the user asks to convert, start, or calibrate a Shopee HTML template with real assets.
+- Read `references/generation-contract.md` before creating product workflow decks.
+- Read `references/failure-mode-registry.md` before QA or when layout issues are reported.
+- Read `references/user-preferences.md` when adapting decks to Jialun's Shopee slide preferences.
 
 ## Integration Guidance
 
